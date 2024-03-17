@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="hringur.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.3416246"
+     inkscape:cx="313.42598"
+     inkscape:cy="338.39571"
+     inkscape:window-width="1920"
+     inkscape:window-height="1010"
+     inkscape:window-x="-6"
+     inkscape:window-y="-6"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="path713"
+       style="fill:none;stroke:#000000;stroke-width:0.467519"
+       d="m 90.519915,57.881474 c 0,4.094591 -1.386467,7.867134 -3.717979,10.878633 -1.20515,1.556634 -2.6628,2.90993 -4.311985,3.999261 -2.840923,1.876506 -6.250215,2.969716 -9.916251,2.969716 -3.110241,0 -6.035686,-0.786861 -8.586039,-2.171336 -2.273046,-1.233935 -4.248135,-2.942589 -5.790543,-4.991975 -2.241858,-2.97874 -3.569633,-6.677312 -3.569633,-10.684299 0,-3.07516 0.782031,-5.96867 2.159099,-8.494566 0.936641,-1.718038 2.148565,-3.266006 3.576932,-4.585387 3.202899,-2.958514 7.4941,-4.767658 12.210184,-4.767658 4.246435,0 8.148398,1.46676 11.221584,3.918639 2.001188,1.596606 3.650948,3.610933 4.815557,5.909991 1.221308,2.410989 1.909074,5.135108 1.909074,8.018981 z"
+       sodipodi:nodetypes="sssssssssssss" />
+  </g>
+</svg>
