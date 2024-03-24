@@ -1,0 +1,39 @@
+rect{
+    fill: white;
+    width: 20%;
+    height: 5px;
+    stroke-width: .8px;
+    stroke: black;
+    position: absolute;
+}
+
+path{
+    fill:#c9adc9;
+    stroke:#000;
+    stroke-width:.864583px; 
+    stroke-linecap:butt;
+    stroke-linejoin:miter;
+    stroke-opacity:1;
+    pointer-events: all;
+}
+
+
+.eyes-animate {
+    transform-origin: center;
+    transform: rotate(360deg);
+    transition: 2s linear;
+}
+
+@keyframes rotation{ 100%{ transform:rotate(360deg); } }
+
+  
+#touch-region {
+    height: 200px;
+    background: #ddd;
+}
+.circle {
+    margin: 2px;
+    padding: 4px;
+    display: inline-block;
+    border-radius: 100%;
+}

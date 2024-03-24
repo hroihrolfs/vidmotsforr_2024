@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Touch events: multitouch count</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+
+</head>
+<style>
+rect{
+    fill: white;
+    width: 20%;
+    height: 5px;
+    stroke-width: .8px;
+    stroke: black;
+    position: absolute;
+}
+
+path{
+    fill:#c9adc9;
+    stroke:#000;
+    stroke-width:.864583px; 
+    stroke-linecap:butt;
+    stroke-linejoin:miter;
+    stroke-opacity:1;
+    pointer-events: all;
+}
+
+
+.eyes {
+  transform-origin: 0;
+}
+
+@keyframes rotation{
+  100% { transform: rotate(360deg); }
+}
+
+  
+#touch-region {
+    height: 200px;
+    background: #ddd;
+}
+.circle {
+    margin: 2px;
+    padding: 4px;
+    display: inline-block;
+    border-radius: 100%;
+}
+
+</style>
+<body>
+  <b>Long pressure</b>
+  <p>Halt niðri touch í 2 sekúndur.</p>
+  <div id="touch-region"></div>
+
+  <svg viewBox="-1 0 40 40" height="50%" xmlns="http://www.w3.org/2000/svg">
+    <g class="obj">
+      <path class="bodyObj" d="M0 0c5.752 3.095 11.64 4.798 17.65 4.922 6.47.134 13.083-1.56 19.82-5.316-2.508 6.174-3.24 11.58-3.195 16.17.076 7.699 2.34 13.105 2.09 15.993-.387 4.463-6.052 3.41-12.73-1.256a50.433 50.433 0 0 1-5.492-4.48c-2.532 2.147-5.478 4.204-8.262 5.738-5.879 3.239-11.037 4.149-10.07-1.325.505-2.858 2.449-7.542 2.602-14.668.093-4.317-.472-9.53-2.413-15.778z" />
+      <g id="eyes">
+        <rect x="20%" y="30%"/>
+        <rect x="53%" y="30%"/>
+      </g>  
+    </g>
+  </svg>
+ 
+</body> 
+
+<script>
+   let touchRegionElement = document.getElementById('touch-region');
+   let longPressureTime;
+
+
+   touchRegionElement.addEventListener('touchstart', function(e) {
+    e.preventDefault();
+    longPressureTime = setTimeout(function () {
+      console.log("long pressure");
+      document.getElementById("eyes").style.animation="rotation 3s linear";
+    }, 2000);
+   });
+
+
+</script>
+
+</html>
