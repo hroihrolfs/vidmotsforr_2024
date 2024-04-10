@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { Texture } from 'three';
+import { TextureLoader } from 'three';
 
 // const controls = new OrbitControls( camera, renderer.domElement );  // þarf að færa eftir að cameran erbúin til.
 // const loader = new GLTFLoader();
@@ -20,18 +22,12 @@ document.body.appendChild( renderer.domElement );
 
 
 // material 
-const loader = new THREE.CubeTextureLoader();
-loader.setPath( "/verk3_skil/floor.jpg" );
-const textureCube = loader.load( [
-    "floor.png", "floor.png",
-    "floor.png", "floor.png",
-    "floor.png", "floor.png"
-] );
+const loader = new THREE.TextureLoader().load( "/verk3/verk3_skil/resources/uv-test-bw.png" );
 
 // cube fyrir neðan"
 // default shape cube.                  x  y  z
-const geometry = new THREE.BoxGeometry( 10, 1, 1 ); // stærð
-const material = new THREE.MeshStandardMaterial( { color: 0xffffff, envMap: textureCube } ); // litur
+const geometry = new THREE.BoxGeometry( 1, 1, 1 ); // stærð
+const material = new THREE.MeshBasicMaterial( { map:loader } ); // litur
 const cube = new THREE.Mesh( geometry, material );
 scene.add( cube );
 
