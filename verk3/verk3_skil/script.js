@@ -39,16 +39,34 @@ scene.add( cube );
 // Setja inn scannaða hlutinn.
 
 let model;
+let rocket;
 
-const ScannedLoader = new GLTFLoader();
-ScannedLoader.load( "/verk3/verk3_skil/resources/basketball.glb", ( gltf ) => {
+function gltfMaker(path){
+    const ScannedLoader = new GLTFLoader();
+    ScannedLoader.load( path, ( gltf ) => {
+    
+        model = gltf.scene;
+    
+        scene.add( model );
+    } );
+    
+}
 
-    model = gltf.scene;
+function gltfScaleMaker(path){
+    const ScannedLoader = new GLTFLoader();
+    ScannedLoader.load( path, ( gltf ) => {
+    
+        rocket = gltf.scene;
+        rocket.scale.set(0.2,0.2,0.2);
+        rocket.position.x = 3.5;
+        rocket.rotation.x = 5;
+        
+        scene.add( rocket );
+    } );
+}
 
-    scene.add( model );
-} );
-
-
+gltfMaker("/verk3/verk3_skil/resources/basketball.glb");
+gltfScaleMaker("/verk3/verk3_skil/resources/SpaceShuttle.gltf");
 
 // --------------------------------------------------------------------------------------------------------
 
@@ -65,6 +83,11 @@ function animate() {
     if (model){
         model.rotation.y += 0.01;   
     }
+    if ( rocket ){
+        rocket.rotation.y = 187;
+        
+    }
+    
     renderer.render( scene, camera);
 }
 
