@@ -25,7 +25,7 @@ const controls = new OrbitControls( camera, renderer.domElement );  // þarf að
 // Cube code --------------------------------------------------------------------------------------------
 
 // material 
-const loader = new THREE.TextureLoader().load( "/docs/resources/floor.jpg" );
+const loader = new THREE.TextureLoader().load( "./resources/floor.jpg" );
 
 // cube fyrir neðan"
 // default shape cube.                  x  y  z
@@ -65,8 +65,8 @@ function gltfScaleMaker(path){
     } );
 }
 
-gltfMaker("/docs/resources/basketball.glb");
-gltfScaleMaker("/docs/resources/SpaceShuttle.gltf");
+gltfMaker("./resources/basketball.glb");
+gltfScaleMaker("./resources/SpaceShuttle.gltf");
 
 // --------------------------------------------------------------------------------------------------------
 
