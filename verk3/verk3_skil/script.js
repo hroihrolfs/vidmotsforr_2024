@@ -37,16 +37,23 @@ scene.add( cube );
 // -------------------------------------------------------------------------------------------------------
 
 // Setja inn scannaða hlutinn.
+
+let model;
+
 const ScannedLoader = new GLTFLoader();
-ScannedLoader.load( "/verk3/verk3_skil/resources/basketball.glb", function ( gltf ){
+ScannedLoader.load( "/verk3/verk3_skil/resources/basketball.glb", ( gltf ) => {
 
-    scene.add( gltf.scene);
+    model = gltf.scene;
 
+    scene.add( model );
 } );
+
+
 
 // --------------------------------------------------------------------------------------------------------
 
-const light = new THREE.AmbientLight( 0xfffff );
+// ljósið.
+const light = new THREE.AmbientLight( 0x404040,50 );
 scene.add( light );
 
 
@@ -54,7 +61,10 @@ scene.add( light );
 // loopa sem er alltaf að rendera og updatea.
 function animate() {
     requestAnimationFrame( animate );
-    cube.rotation.y += 0.01;
+    // ef modelið (körfuboltinn er renderaður) þá má byrja animation, ef ekki fékk ég bara fullt af undefined og keyrði ekki.
+    if (model){
+        model.rotation.y += 0.01;   
+    }
     renderer.render( scene, camera);
 }
 
