@@ -1,86 +1,140 @@
+
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { ARButton } from 'three/addons/webxr/ARButton.js';
 
+let container;
+let camera, scene, renderer;
+let controller;
 
+let reticle;
 
-async function activateXR() {
-    // Add a canvas element and initialize a WebGL context that is compatible with WebXR.
-        const canvas = document.createElement("canvas");
-        document.body.appendChild(canvas);
-        const gl = canvas.getContext("webgl", {xrCompatible: true});
+let hitTestSource = null;
+let hitTestSourceRequested = false;
 
+init();
+animate();
 
-        const scene = new THREE.Scene();
-        
-        // kubbur með mismunandi lit á hverri hlið.
-        const materials =[
-            new THREE.MeshBasicMaterial({color: 0xff0000}),
-            new THREE.MeshBasicMaterial({color: 0x0000ff}),
-            new THREE.MeshBasicMaterial({color: 0x00ff00}),
-            new THREE.MeshBasicMaterial({color: 0xff00ff}),
-            new THREE.MeshBasicMaterial({color: 0x00ffff}),
-            new THREE.MeshBasicMaterial({color: 0xffff00})
-        ];
+function init() {
 
-        const cube = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2), materials);
-        cube.position.set(1,1,1);
-        scene.add(cube);
+    container = document.createElement( 'div' );
+    document.body.appendChild( container );
 
-        // setja upp renderer
-        const renderer = new THREE.WebGLRenderer({
-            alpha: true,
-            preserveDrawingBuffer: true,
-            canvas: canvas,
-            context: gl
-        });
-        renderer.autoClear = false;
+    scene = new THREE.Scene();
 
-        // The API directly updates the camera matrices.
-        // Disable matrix auto updates so three.js doesn't attempt
-        // to handle the matrices independently.
-        const camera = new THREE.PerspectiveCamera();
-        camera.matrixAutoUpdate = false;
+    camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
 
+    const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 3 );
+    light.position.set( 0.5, 1, 0.25 );
+    scene.add( light );
 
-        // Initialize a WebXR session using "immersive-ar".
-        const session = await navigator.xr.requestSession("immersive-ar");
-        session.updateRenderState({
-            baseLayer: new XRWebGLLayer(session, gl)
-        });
+    //
 
-        // A 'local' reference space has a native origin that is located
-        // near the viewer's position at the time the session was created.
-        const referenceSpace = await session.requestReferenceSpace('local');
+    renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.xr.enabled = true;
+    container.appendChild( renderer.domElement );
 
-        // Create a render loop that allows us to draw on the AR view.
-        const onXFrame = (time, frame) => {
-            //que up the next draw request.
-            session.requestAnimationFrame(onXFrame);
+    //
 
-            // Bind the graphics framebuffer to the baseLayer's framebuffer
-            gl.bindFramebuffer(gl.FRAMEBUFFER, session.renderState.baseLayer.framebuffer);
+    document.body.appendChild( ARButton.createButton( renderer, { requiredFeatures: [ 'hit-test' ] } ) );
 
-            // Retrieve the pose of the device.
-            // XRFrame.getViewerPose can return null while the session attempts to establish tracking.
-            const pose = frame.getViewerPose(referenceSpace);
-            if (pose) {
-                // In mobile AR, we only have one view.
-                const view = pose.views[0];
-            
-                const viewport = session.renderState.baseLayer.getViewport(view);
-                renderer.setSize(viewport.width, viewport.height)
-            
-                // Use the view's transform matrix and projection matrix to configure the THREE.camera.
-                camera.matrix.fromArray(view.transform.matrix)
-                camera.projectionMatrix.fromArray(view.projectionMatrix);
-                camera.updateMatrixWorld(true);
-            
-                // Render the scene with THREE.WebGLRenderer.
-                renderer.render(scene, camera)
-              }
-            }
-            session.requestAnimationFrame(onXRFrame);       
+    //s
+
+    const geometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.2, 32 ).translate( 0, 0.1, 0 );
+
+    function onSelect() {
+
+        if ( reticle.visible ) {
+
+            const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
+            const mesh = new THREE.Mesh( geometry, material );
+            reticle.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
+            mesh.scale.y = Math.random() * 2 + 1;
+            scene.add( mesh );
+
+        }
+
+    }
+
+    controller = renderer.xr.getController( 0 );
+    controller.addEventListener( 'select', onSelect );
+    scene.add( controller );
+
+    reticle = new THREE.Mesh(
+        new THREE.RingGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
+        new THREE.MeshBasicMaterial()
+    );
+    reticle.matrixAutoUpdate = false;
+    reticle.visible = false;
+    scene.add( reticle );
+
+    //
+
+    window.addEventListener( 'resize', onWindowResize );
 }
 
-document.querySelector("button").click(activateXR());
+function onWindowResize() {
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+//
+
+function animate() {
+    renderer.setAnimationLoop( render );
+}
+
+function render( timestamp, frame ) {
+
+    if ( frame ) {
+
+        const referenceSpace = renderer.xr.getReferenceSpace();
+        const session = renderer.xr.getSession();
+
+        if ( hitTestSourceRequested === false ) {
+
+            session.requestReferenceSpace( 'viewer' ).then( function ( referenceSpace ) {
+
+                session.requestHitTestSource( { space: referenceSpace } ).then( function ( source ) {
+
+                    hitTestSource = source;
+
+                } );
+
+            } );
+
+            session.addEventListener( 'end', function () {
+
+                hitTestSourceRequested = false;
+                hitTestSource = null;
+
+            } );
+
+            hitTestSourceRequested = true;
+
+        }
+
+        if ( hitTestSource ) {
+
+            const hitTestResults = frame.getHitTestResults( hitTestSource );
+
+            if ( hitTestResults.length ) {
+
+                const hit = hitTestResults[ 0 ];
+
+                reticle.visible = true;
+                reticle.matrix.fromArray( hit.getPose( referenceSpace ).transform.matrix );
+
+            } else {
+
+                reticle.visible = false;
+
+            }
+        }
+    }
+    renderer.render( scene, camera );
+}

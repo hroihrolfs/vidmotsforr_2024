@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello WebXr!</title>
+	<head>
+		<title>three.js ar - hit test</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<!-- <link type="text/css" rel="stylesheet" href="main.css"> -->
+	</head>
+	<body>
 
-    <!-- three.js -->
-    <script type="importmap">
-        {
-          "imports": {
-            "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
-            "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
-          }
+		<div id="info">
+			<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> ar - hit test<br/>(Chrome Android 81+)
+		</div>
+
+		<script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+          "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
         }
-      </script>
-</head>
-<body>
+      }
+    </script>
+
     <script type="module" src="./script.js"></script>
 
-    <button id="button">Start Hello WebXR</button>
-    
-    
-</body>
+	</body>
 </html>
