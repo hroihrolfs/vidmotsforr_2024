@@ -65,7 +65,8 @@ function init() {
                 const clone = ball.clone();
                 const scalePercentage = 0.2;
                 clone.scale.multiplyScalar(scalePercentage);
-                clone.position.copy(reticle.position);
+                // clone.position.copy(reticle.position);
+                reticle.matrix.decompose(clone.position, clone.quaternion, clone.scale);
                 console.log("added");
                 scene.add(clone);
             }
