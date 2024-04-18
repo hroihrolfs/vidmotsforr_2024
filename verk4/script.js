@@ -1,6 +1,8 @@
 
 import * as THREE from 'three';
 import { ARButton } from 'three/addons/webxr/ARButton.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
 
 let container;
 let camera, scene, renderer;
@@ -13,6 +15,7 @@ let hitTestSourceRequested = false;
 
 init();
 animate();
+
 
 function init() {
 
@@ -29,7 +32,7 @@ function init() {
 
     //
 
-    renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+    renderer = new THREE.WebGLRenderer( { alpha: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.xr.enabled = true;
@@ -39,19 +42,39 @@ function init() {
 
     document.body.appendChild( ARButton.createButton( renderer, { requiredFeatures: [ 'hit-test' ] } ) );
 
-    //s
+    // býr til körfuboltann.
 
-    const geometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.2, 32 ).translate( 0, 0.1, 0 );
+
+    let ball;
+        
+    const Loader = new GLTFLoader();
+    Loader.load( "/verk4/resources/basketball.glb", ( gltf ) => {
+    ball = gltf.scene;
+    console.log("körfubolti, búinn til");
+    } )
+        
+
+
+    //
+    // const geometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.2, 32 ).translate( 0, 0.1, 0 );
 
     function onSelect() {
 
         if ( reticle.visible ) {
+            if(ball){
+                const clone = ball.clone();
+                const scalePercentage = 0.2;
+                clone.scale.multiplyScalar(scalePercentage);
+                clone.position.copy(reticle.position);
+                console.log("added");
+                scene.add(clone);
+            }
 
-            const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
-            const mesh = new THREE.Mesh( geometry, material );
-            reticle.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
-            mesh.scale.y = Math.random() * 2 + 1;
-            scene.add( mesh );
+            // const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
+            // const mesh = new THREE.Mesh( geometry, material );
+            // reticle.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
+            // mesh.scale.y = Math.random() * 2 + 1;
+            // scene.add( mesh );
 
         }
 
