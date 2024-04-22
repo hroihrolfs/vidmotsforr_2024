@@ -48,7 +48,7 @@ function init() {
     let ball;
         
     const Loader = new GLTFLoader();
-    Loader.load( "/verk4/resources/basketball.glb", ( gltf ) => {
+    Loader.load( "./resources/basketball.glb", ( gltf ) => {
     ball = gltf.scene;
     console.log("körfubolti, búinn til");
     } )
@@ -56,7 +56,6 @@ function init() {
 
 
     //
-    // const geometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.2, 32 ).translate( 0, 0.1, 0 );
 
     function onSelect() {
 
@@ -70,12 +69,6 @@ function init() {
                 console.log("added");
                 scene.add(clone);
             }
-
-            // const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
-            // const mesh = new THREE.Mesh( geometry, material );
-            // reticle.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
-            // mesh.scale.y = Math.random() * 2 + 1;
-            // scene.add( mesh );
 
         }
 
