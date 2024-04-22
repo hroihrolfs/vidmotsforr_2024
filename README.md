@@ -15,3 +15,6 @@
 **Lidur 3:**
 Kláraði ekki alveg innan skilafrest.
 [linkur](https://github.com/hroihrolfs/vidmotsforr_2024/blob/main/verk2/index.html)
+
+**Verkefni 4:**
+[Linkur á virkni](https://hroihrolfs.github.io/vidmotsforr_2024/)
