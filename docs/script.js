@@ -1,94 +1,164 @@
+
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { ARButton } from 'three/addons/webxr/ARButton.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 
-// const loader = new GLTFLoader();
+let container;
+let camera, scene, renderer;
+let controller;
 
-// allt fyrir ofan er import og add-ons.
+let reticle;
 
+let hitTestSource = null;
+let hitTestSourceRequested = false;
 
-// cameran og rendera inn.
-const scene = new THREE.Scene();    // 75 er fov (degrees), aspect ratio, near og far (nálægasti punktur og lengsti í burt.)
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.z = 5;
-camera.position.y = 2;
-
-// renderinn er webgl og setjum hann í stærðina á glugganum og bætum honum sem child við body.
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
-
-const controls = new OrbitControls( camera, renderer.domElement );  // þarf að færa eftir að cameran/renderinn er búin til.
-
-
-// Cube code --------------------------------------------------------------------------------------------
-
-// material 
-const loader = new THREE.TextureLoader().load( "./resources/floor.jpg" );
-
-// cube fyrir neðan"
-// default shape cube.                  x  y  z
-const geometry = new THREE.BoxGeometry( 4, .5  , 4 ); // stærð
-const material = new THREE.MeshBasicMaterial( { map:loader } ); // litur
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
-
-// -------------------------------------------------------------------------------------------------------
-
-// Setja inn scannaða hlutinn.
-
-let model;
-let rocket;
-
-function gltfMaker(path){
-    const ScannedLoader = new GLTFLoader();
-    ScannedLoader.load( path, ( gltf ) => {
-    
-        model = gltf.scene;
-    
-        scene.add( model );
-    } );
-    
-}
-
-function gltfScaleMaker(path){
-    const ScannedLoader = new GLTFLoader();
-    ScannedLoader.load( path, ( gltf ) => {
-    
-        rocket = gltf.scene;
-        rocket.scale.set(0.2,0.2,0.2);
-        rocket.position.x = 3.5;
-        rocket.rotation.x = 5;
-        
-        scene.add( rocket );
-    } );
-}
-
-gltfMaker("./resources/basketball.glb");
-gltfScaleMaker("./resources/SpaceShuttle.gltf");
-
-// --------------------------------------------------------------------------------------------------------
-
-// ljósið.
-const light = new THREE.AmbientLight( 0x404040,50 );
-scene.add( light );
-
-
-
-// loopa sem er alltaf að rendera og updatea.
-function animate() {
-    requestAnimationFrame( animate );
-    // ef modelið (körfuboltinn er renderaður) þá má byrja animation, ef ekki fékk ég bara fullt af undefined og keyrði ekki.
-    if (model){
-        model.rotation.y += 0.01;   
-    }
-    if ( rocket ){
-        rocket.rotation.y = 187;
-        
-    }
-    
-    renderer.render( scene, camera);
-}
-
+init();
 animate();
+
+
+function init() {
+
+    container = document.createElement( 'div' );
+    document.body.appendChild( container );
+
+    scene = new THREE.Scene();
+
+    camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
+
+    const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 3 );
+    light.position.set( 0.5, 1, 0.25 );
+    scene.add( light );
+
+    //
+
+    renderer = new THREE.WebGLRenderer( { alpha: true } );
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.xr.enabled = true;
+    container.appendChild( renderer.domElement );
+
+    //
+
+    document.body.appendChild( ARButton.createButton( renderer, { requiredFeatures: [ 'hit-test' ] } ) );
+
+    // býr til körfuboltann.
+
+
+    let ball;
+        
+    const Loader = new GLTFLoader();
+    Loader.load( "/verk4/resources/basketball.glb", ( gltf ) => {
+    ball = gltf.scene;
+    console.log("körfubolti, búinn til");
+    } )
+        
+
+
+    //
+    // const geometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.2, 32 ).translate( 0, 0.1, 0 );
+
+    function onSelect() {
+
+        if ( reticle.visible ) {
+            if(ball){
+                const clone = ball.clone();
+                const scalePercentage = 0.2;
+                clone.scale.multiplyScalar(scalePercentage);
+                // clone.position.copy(reticle.position);
+                reticle.matrix.decompose(clone.position, clone.quaternion, clone.scale);
+                console.log("added");
+                scene.add(clone);
+            }
+
+            // const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
+            // const mesh = new THREE.Mesh( geometry, material );
+            // reticle.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
+            // mesh.scale.y = Math.random() * 2 + 1;
+            // scene.add( mesh );
+
+        }
+
+    }
+
+    controller = renderer.xr.getController( 0 );
+    controller.addEventListener( 'select', onSelect );
+    scene.add( controller );
+
+    reticle = new THREE.Mesh(
+        new THREE.RingGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
+        new THREE.MeshBasicMaterial()
+    );
+    reticle.matrixAutoUpdate = false;
+    reticle.visible = false;
+    scene.add( reticle );
+
+    //
+
+    window.addEventListener( 'resize', onWindowResize );
+}
+
+function onWindowResize() {
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+renderer.setSize( window.innerWidth, window.innerHeight );
+}
+
+//
+
+function animate() {
+    renderer.setAnimationLoop( render );
+}
+
+function render( timestamp, frame ) {
+
+    if ( frame ) {
+
+        const referenceSpace = renderer.xr.getReferenceSpace();
+        const session = renderer.xr.getSession();
+
+        if ( hitTestSourceRequested === false ) {
+
+            session.requestReferenceSpace( 'viewer' ).then( function ( referenceSpace ) {
+
+                session.requestHitTestSource( { space: referenceSpace } ).then( function ( source ) {
+
+                    hitTestSource = source;
+
+                } );
+
+            } );
+
+            session.addEventListener( 'end', function () {
+
+                hitTestSourceRequested = false;
+                hitTestSource = null;
+
+            } );
+
+            hitTestSourceRequested = true;
+
+        }
+
+        if ( hitTestSource ) {
+
+            const hitTestResults = frame.getHitTestResults( hitTestSource );
+
+            if ( hitTestResults.length ) {
+
+                const hit = hitTestResults[ 0 ];
+
+                reticle.visible = true;
+                reticle.matrix.fromArray( hit.getPose( referenceSpace ).transform.matrix );
+
+            } else {
+
+                reticle.visible = false;
+
+            }
+        }
+    }
+    renderer.render( scene, camera );
+}
