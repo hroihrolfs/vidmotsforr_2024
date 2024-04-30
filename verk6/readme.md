@@ -13,7 +13,9 @@ Skrefin eru
 
 4. Huga að tengja þetta við raspi og nota skjávarpa.
 
+:)
 
+![28d835b1d5e237de9608dcd2bee31a8f](https://github.com/hroihrolfs/vidmotsforr_2024/assets/89214090/0ecb9a47-0885-4834-a2e3-6f2bbdf82c8e)
 
 
 
