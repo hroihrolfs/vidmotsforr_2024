@@ -56,9 +56,9 @@ function init() {
 
 
     //
-    // const geometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.2, 32 ).translate( 0, 0.1, 0 );
 
     function onSelect() {
+        // inleiða anchors og nota ennþá clone (grunar að það hjálpar með hraðann.)
 
         if ( reticle.visible ) {
             if(ball){
@@ -70,12 +70,6 @@ function init() {
                 console.log("added");
                 scene.add(clone);
             }
-
-            // const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
-            // const mesh = new THREE.Mesh( geometry, material );
-            // reticle.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
-            // mesh.scale.y = Math.random() * 2 + 1;
-            // scene.add( mesh );
 
         }
 
