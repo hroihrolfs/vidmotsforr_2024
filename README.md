@@ -18,3 +18,6 @@ Kláraði ekki alveg innan skilafrest.
 
 **Verkefni 4:**
 [Linkur á virkni](https://hroihrolfs.github.io/vidmotsforr_2024/)
+
+**Verkefni 5:**
+[linkur á möppu](https://github.com/hroihrolfs/vidmotsforr_2024/tree/main/verk5)
