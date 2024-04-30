@@ -129,10 +129,6 @@ let lastVideoTime = -1;
     }
 
 
-
-
-
-
 // ===============================================================================
 // kubbur vinnsla fyrir neðan
 // ===============================================================================
@@ -164,9 +160,20 @@ function animate() {
     if(gesture === "Victory"){
         cube.rotation.x += 0.05;
         cube.rotation.y += 0.05;
-
     }
-    // cube.position.y += scope;
+    else if(gesture === "Thumb_Down"){
+        cube.scale.x -= 0.02;
+        cube.scale.y -= 0.02;
+        cube.scale.z -= 0.02;
+    } else if(gesture === "Thumb_Up"){
+        cube.scale.x += 0.02;
+        cube.scale.y += 0.02;
+        cube.scale.z += 0.02;
+    }
+
+    
+
+
     renderer.render( scene, camera);
 }
 
