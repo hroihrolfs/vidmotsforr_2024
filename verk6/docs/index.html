@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lokaverk</title>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+<!-- svg-ið og stjórn fyrir það -->
+    <div>
+        <svg class="svg-icon" width="100%" height="1000">
+            <polygon stroke="one" fill="red" points="194 242 , 426 283 , 678 246 , 423 309"></polygon>
+        </svg>
+    </div>
+
+    
+    
+    <button id="start-anim">start animation</button>
+    <input type="range" min="1" max="70" id="slider-anim">
+
+    <div id="border"></div>
+
+<!-- handlandmarks dót -->
+
+    <div width: 50%;>
+        <button id='webcamButton'>ENABLE WEBCAM</button>
+        <div style='position: relative;'>
+            <video id='webcam' autoplay></video>
+            <canvas id='output_canvas' width='480' height='360'
+                style='position: absolute; left: 0px; top: 0px;'></canvas>
+        </div>
+
+
+    </div>
+    <div id="scene-container">
+    </div>
+
+<!-- importa scriptunum -->
+    <script src="./lib/anime.min.js"></script>
+    <script type="module" src="./script.js"></script>
+    
+
+    
+</body>
+</html>

@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "animejs": "^3.2.2"
+    "@mediapipe/tasks-vision": "^0.10.13"
   }
 }
