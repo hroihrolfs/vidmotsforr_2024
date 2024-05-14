@@ -25,6 +25,8 @@ Skrefin eru
 Gekk vel að setja upp Handlandmarks og tengja það við nýjasta version. Notaði chat-gpt til þess að búa til vector fall sem reiknar hvort tveir punktar séu að snertast. Svg animation gekk vel og library-ið gekk vel að læra á.
 útfærslan var góð en náði ekki að búa til mörg animation og eiginleika á þessum tíma en það sem ég gerði virkar bara ágætlega. Hefði viljað gera síðuna betri og ýktari líkt og í þáttunum en það væri mikil handavinna með svg og bæta inn threejs hlutum.
 
+Bætti ekki við raspi og skjávarpa.
+
 
 
 -- -
