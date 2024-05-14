@@ -35,8 +35,8 @@ Library:
 [Animejs](https://animejs.com/documentation/#cssSelector)
 [Handlandmarks](https://developers.google.com/mediapipe/solutions/vision/hand_landmarker)
 -- -
-Hróar Hrólfsson
-Tækniskólinn 2024
+Hróar Hrólfsson,
+Tækniskólinn 2024,
 FORR3FV05EU-Hát Viðmótsforritun 
 
 
