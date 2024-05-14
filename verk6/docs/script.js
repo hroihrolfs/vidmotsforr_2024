@@ -1,9 +1,5 @@
 // import "./lib/handgesture.js";
-let mybutton = document.getElementById("start-anim");
-mybutton.addEventListener("click", animation);
 
-let slider = document.getElementById("slider-anim");
-slider.addEventListener("input", move);
 
 let lastTime;
 
@@ -16,35 +12,49 @@ function animation(){
     }
     console.log("click");
     anime({
-        targets: ".svg-icon polygon",
+        targets: ".svg-object polygon",
         points: [
             {value: "194 242 , 423 41 , 678 246 , 418 472"},
             {value: "194 242 , 426 283 , 678 246 , 423 309"},
             {value: "194 242 , 913 81 , 678 246 , 22 463"}
         ],
         direction: "alternate",
-        // loop: true,
         duration: 2000,
         easing: 'easeInOutExpo'
     });
-    
 }
 
+function logo_animation(){
+    anime({
+        targets: ".svg-icon polygon",
+        points: [
+            {value: "150 150 , 200 50 , 100 50 , 150 150"},
+            {value: "250 100 , 150 50 , 50 100 , 150 200"}
+        ],
+        loop: true,
+        duration: 2000,
+        easing:"easeInOutExpo",
+        direction: "alternate"
+    })
+}
 
-function move(p){
+logo_animation();
+
+function move(p, current){
     console.log("move-anim");
     let pos = p*window.innerWidth;
     
     console.log(pos);
-    anime({ 
-        targets: ".svg-icon polygon",
-        translateX: pos
+    anime({
+        targets: ".svg-object polygon",
+        translateX: pos 
     })
 }
 
-
 // hand gesture dot
 
+// result þarf að hafa því það er notað til þess að geyma alla punkkta á hendinni. (notað neðst í skránni)
+let results;
 
 function contact(point1, point2, threshold) {
     // Calculate the distance between the two points
@@ -54,12 +64,7 @@ function contact(point1, point2, threshold) {
 }
 
 
-let results;
-
-
-
 // Get a reference to the container element that will hold our scene
-
 import { GestureRecognizer,HandLandmarker, FilesetResolver, DrawingUtils } from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13';
         let handLandmarker;
         let runningMode = 'IMAGE';
@@ -114,7 +119,6 @@ import { GestureRecognizer,HandLandmarker, FilesetResolver, DrawingUtils } from 
             });
         }
         let lastVideoTime = -1;
-
         async function predictWebcam() {
 
             const webcamElement = document.getElementById('webcam');
@@ -133,7 +137,6 @@ import { GestureRecognizer,HandLandmarker, FilesetResolver, DrawingUtils } from 
                 results = handLandmarker.detectForVideo(video, startTimeMs);
             }
 
-            
             canvasCtx.save();
             canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
             const drawingUtils = new DrawingUtils(canvasCtx);
@@ -153,14 +156,13 @@ import { GestureRecognizer,HandLandmarker, FilesetResolver, DrawingUtils } from 
 
                     if (hendi[0].displayName == "Right") {
                         r = telj;
-            
                     } else {
                         l = telj;
                     }
                     telj += 1;
                 }
                 // console.log("l", l,"r", r);
-
+                
                 if(r != null){
                     const p8 = results.landmarks[r][8];
                     const p4 = results.landmarks[r][4];
@@ -171,19 +173,27 @@ import { GestureRecognizer,HandLandmarker, FilesetResolver, DrawingUtils } from 
                     // fall sem skilar true false yfir hvert þeir séu að snertast, vísi og þumall.
                     if(contact(p8, p4, 0.05)){
                         move(p0);
-                    }
+                    } 
                     //þá er kallað á move og fylgt 0 punkti og fært á x ás.
+                } 
+                if(l != null){
+                    const p1 = results.landmarks[l][4];
+                    const p2 = results.landmarks[l][12];
+                    
+                    if(contact(p1, p2, 0.05)){
+                        animation();
+                    }
                 }
 
                 for (const landmarks of results.landmarks) {
                     drawingUtils.drawConnectors(landmarks, GestureRecognizer.HAND_CONNECTIONS, {
                         color: '#00FF00',
-                        lineWidth: 4
+                        lineWidth: 3
                     });
                     
                     drawingUtils.drawLandmarks(landmarks, {
                         color: '#FF0000',
-                        lineWidth: 2
+                        lineWidth: 1
                     });
                 }
             }
@@ -193,5 +203,3 @@ import { GestureRecognizer,HandLandmarker, FilesetResolver, DrawingUtils } from 
                 window.requestAnimationFrame(predictWebcam);
             }
         }
-
-
